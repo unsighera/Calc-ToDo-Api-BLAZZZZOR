@@ -1,0 +1,124 @@
+﻿@page "/calc"     
+@using System.Data
+
+<PageTitle>Calculator</PageTitle> 
+
+<h1>Calculator</h1> 
+
+<p role="result">Result: @result</p> 
+<p role="expression">Expression: @expression</p> 
+
+<button class="btn btn-primary" @onclick="Digit1">1</button> 
+<button class="btn btn-primary" @onclick="Digit2">2</button> 
+<button class="btn btn-primary" @onclick="Digit3">3</button> 
+<button class="btn btn-primary" @onclick="Digit4">4</button> 
+<button class="btn btn-primary" @onclick="Digit5">5</button> 
+<button class="btn btn-primary" @onclick="Digit6">6</button> 
+<button class="btn btn-primary" @onclick="Digit7">7</button> 
+<button class="btn btn-primary" @onclick="Digit8">8</button> 
+<button class="btn btn-primary" @onclick="Digit9">9</button> 
+<button class="btn btn-primary" @onclick="Digit0">0</button> 
+<button class="btn btn-primary" @onclick="Division">/</button> 
+<button class="btn btn-primary" @onclick="Multiply">*</button> 
+<button class="btn btn-primary" @onclick="Minus">-</button> 
+<button class="btn btn-primary" @onclick="Plus">+</button> 
+<button class="btn btn-primary" @onclick="Calculate">=</button> 
+<button class="btn btn-primary" @onclick="Clear">Clear</button> 
+
+
+@code { 
+
+    private int result = 0;
+    private string expression;
+    private void IncrementCount()
+    {
+        result++;
+    }
+    private void Digit1()
+    {
+        expression = expression + "1";
+    }
+    private void Digit2()
+    {
+        expression = expression + "2";
+    }
+    private void Digit3()
+    {
+        expression = expression + "3";
+    }
+    private void Digit4()
+    {
+        expression = expression + "4";
+    }
+    private void Digit5()
+    {
+        expression = expression + "5";
+    }
+    private void Digit6()
+    {
+        expression = expression + "6";
+    }
+    private void Digit7()
+    {
+        expression = expression + "7";
+    }
+    private void Digit8()
+    {
+        expression = expression + "8";
+    }
+    private void Digit9()
+    {
+        expression = expression + "9";
+    }
+    private void Digit0()
+    {
+        expression = expression + "0";
+    }
+    private void Calculate()
+    {
+        try
+        {
+            // Используем DataTable для вычисления выражения
+            DataTable dt = new DataTable();
+            var result = dt.Compute(expression, "");
+            this.result = Convert.ToInt32(result);
+        }
+        catch (Exception ex)
+        {
+            // Если произошла ошибка при вычислении, обработаем её
+            // Например, выведем сообщение об ошибке или сбросим выражение
+            expression = "";
+            this.result = 0;
+            Console.WriteLine($"Ошибка при вычислении выражения: {ex.Message}");
+        }
+    }
+
+    private void Clear()
+    {
+        // Очищаем выражение и результат
+        expression = "";
+        result = 0;
+    }
+
+    // Методы для операций
+    private void Division()
+    {
+        expression = expression + " / ";
+    }
+
+    private void Multiply()
+    {
+        expression = expression + " * ";
+    }
+
+    private void Plus()
+    {
+        expression = expression + " + ";
+    }
+
+    private void Minus()
+    {
+        expression = expression + " - ";
+    }
+
+}

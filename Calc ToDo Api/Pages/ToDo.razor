@@ -1,0 +1,62 @@
+﻿@page "/todos"
+@using System.Collections.Generic
+
+<h3>Список дел</h3>
+
+<!-- Форма для добавления нового дела -->
+<form @onsubmit="AddTodo">
+    <div class="form-group">
+        <label for="todoTitle">Новое дело:</label>
+        <input type="text" class="form-control" id="todoTitle" @bind="newTodoTitle">
+    </div>
+    <button type="submit" class="btn btn-primary">Добавить</button>
+</form>
+
+<!-- Таблица для отображения списка дел -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>Статус</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var todo in todos)
+        {
+                <tr>
+                    <td>@todo.Title</td>
+                    <td>@(todo.IsCompleted ? "Выполнено" : "Не выполнено")</td>
+                </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    // Список дел
+    List<ToDoItem> todos = new List<ToDoItem>
+    {
+        new ToDoItem { Title = "Купить продукты", IsCompleted = false },
+        new ToDoItem { Title = "Почистить дом", IsCompleted = true },
+        new ToDoItem { Title = "Подготовиться к собеседованию", IsCompleted = false }
+    };
+
+    // Новое дело для добавления
+    string newTodoTitle;
+
+    // Метод для добавления нового дела
+    private void AddTodo()
+    {
+        if (!string.IsNullOrWhiteSpace(newTodoTitle))
+        {
+            todos.Add(new ToDoItem { Title = newTodoTitle, IsCompleted = false });
+            newTodoTitle = string.Empty; // Сброс поля ввода после добавления дела
+        }
+    }
+
+    // Класс для представления дела
+    public class ToDoItem
+    {
+        public string Title { get; set; }
+        public bool IsCompleted { get; set; }
+    }
+}

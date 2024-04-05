@@ -1,0 +1,86 @@
+﻿@page "/register"
+@using Calc_ToDo_Api.Pages;
+
+<h3>Регистрация</h3>
+
+<div class="form-group">
+    <label for="inputEmail">Email</label>
+    <input type="email" class="form-control" id="inputEmail" @bind="email">
+</div>
+
+<div class="form-group">
+    <label for="inputPassword">Пароль</label>
+    <input type="password" class="form-control" id="inputPassword" @bind="password">
+</div>
+
+<button type="button" class="btn btn-primary" @onclick="Register">Зарегистрироваться</button>
+
+@if (showConfirmationModal)
+{
+        <div class="modal fade show" tabindex="-1" style="display:block;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Подтверждение кода</h5>
+                        <button type="button" class="close" @onclick="CloseConfirmationModal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="inputCode">Введите код:</label>
+                            <input type="text" class="form-control" id="inputCode" @bind="confirmationCode">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="CloseConfirmationModal">Закрыть</button>
+                        <button type="button" class="btn btn-primary" @onclick="ConfirmRegistration">Подтвердить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+}
+
+@if (!string.IsNullOrEmpty(message))
+{
+        <div class="alert alert-@messageType" role="alert">
+        @message
+        </div>
+}
+
+@code {
+    private string email;
+    private string password;
+    public string confirmationCode;
+    private bool showConfirmationModal = false;
+    private string message = "";
+    private string messageType = "";
+
+    private void Register()
+    {
+        MailSender.SendCode(email);
+        showConfirmationModal = true;
+    }
+
+    private void ConfirmRegistration()
+    {
+        // Здесь можно добавить логику для проверки кода подтверждения и завершения регистрации
+        if (confirmationCode == MailSender.sendedCode) // Ваш код подтверждения
+        {
+            message = "Вход успешен!";
+            messageType = "success";
+        }
+        else
+        {
+            message = "Код неверный.";
+            messageType = "danger";
+        }
+
+        showConfirmationModal = false;
+    }
+
+    private void CloseConfirmationModal()
+    {
+        showConfirmationModal = false;
+    }
+}
