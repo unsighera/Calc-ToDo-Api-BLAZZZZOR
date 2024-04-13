@@ -2,8 +2,174 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="row">
 
-Welcome to your new app.
+    @foreach (var pizza in Pizzas)
+    {
+        <div class="col-sm-6" style="margin: 15px 0px;">
+            
+            <div class="card" style="width: 18rem;">
+            
+                <img class="card-img-top" src="@pizza.ImageUrl" alt="Card image cap">
+                
+                <div class="card-body">
+                
+                    <h5 class="card-title">@pizza.Name</h5>
+                    <p class="card-text">@pizza.Description</p>
+                    <p class="card-text"><strong>Price:</strong> $@pizza.Price</p>
+                    <button @onclick="()=>AddToCart(pizza)" class="btn btn-primary">Добавить</button>
+               
+                </div>
+            
+            </div>
+        
+        </div>
+    }
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+    <div id="cart">
+  
+        <h2>Товары в корзине</h2>
+
+        <p>Полная стоимость: $@totalPrice</p>
+        
+        <div id="cart-items" style="display: flex; flex-direction: row; flex-wrap: wrap;">
+        
+            @foreach (var item in CartItems)
+            {
+                <div class="col-sm-6" style="margin: 15px 0px;">
+
+                    <div class="card" style="width: 18rem;">
+
+                        <img class="card-img-top" src="@item.ImageUrl" alt="Card image cap">
+
+                        <div class="card-body">
+
+                            <h5 class="card-title">@item.Name</h5>
+                            <p class="card-text">@item.Description</p>
+                            <p class="card-text"><strong>Price:</strong> $@item.Price</p>
+                            <button @onclick="()=>RemoveFromCart(item)" class="btn btn-danger">Убрать</button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+        
+        </div>
+    
+    </div>
+
+    <div class="card" style="width: 18rem;">
+        <h5>Наменование шедевра</h5>
+        <input @bind-value="Name" />
+        <h5>Состав новой пиццы</h5>
+        <input @bind-value="Description" />
+        <h5>Цена новой пиццы</h5>
+        <input @bind-value="Price" />
+        <h5>Ссылка на картинку для новой пиццы</h5>
+        <input @bind-value="ImageUrl" />
+        <button class="btn btn-primary" @onclick="CreatePizza">Создать</button>
+    </div>
+
+</div>
+
+@code {
+    public class Pizza
+    {
+        public string ?Name { get; set; }
+        public string ?Description { get; set; }
+        public string ?ImageUrl { get; set; }
+        public decimal Price { get; set; }
+    }
+
+    private string Name { get; set; }
+    private string Description { get; set; }
+    private string ImageUrl { get; set; }
+    private decimal Price { get; set; }
+
+    private List<Pizza> Pizzas = new List<Pizza>
+    {
+        new Pizza
+        {
+            Name = "Пиица A4 эксклюзив",
+            Description = "Пицца А4 с соусом глента и заливкой кобякова",
+            ImageUrl = "https://yandex-images.clstorage.net/I5sKv4119/7766866yf/WDwM_wNIusJ-WWC2Qzv3TpLnGyd2_kpuuabACRC9HqUUVB2i6HXLdBQyb5ifp40Z25T-7wbK25m6ce_5xAPA4ghwDfIyRb6jAxx830YL62qCmjdSVv9WH_GKnGUNxBvAZHQ9p0CYHqnU24IILyshrNuFk58H5qKUjohLqPy-Ne9kbOwHp1SzttbdKe57I5dmutKPC947_tPJNo1t0by-eFUdUHuMyLZJtCtugDuLRdzbuetbN2O-bOp4ArSgxh13AHxAi0tQb37y8Q2KD3Nvfkrus3f-qzrn8aphWTl4_oj5KSi3pNiWGVSrjmwrO1msl6GH7ysPnnCKTFYwjAq5kwDctEeDJP8iBoFlroujnz6CGpcnaqsmW5HWEbXR4B70OUkQI3DwPn0E8ybQhzutxFdVY9Mbv4Ycghw6iPxeAXvsYJyrzzDXdmoVRR6Ts-8SpjZrV0oLMhuJ4rW91SDKDEG1dLPU2MIBkHv-3BeDJfQvzf8b14uC_Aa0ViyEColnDMTs50fow0pGhSECIycDDhamM0uCR0rvEbZd-aHA_vSBvSyDVKjavciL_qDbj4m4i9EL2zsrCuRuMHo0aMbx6zjsaCOzsPu2rp25rpMTh55uGkfHup_KjwE6QXGtEIIEQWn8A9x4jrFQtzrQP49lUCsRv7t7t4p05miq6KyKlZuMsBATFyRjVuL1ETof30dOOjovNyYz6tOt0m11mWCGyA3V6NMYJHrtQAPyjNPrIcCn3Qff149a5Ip4kgSAUrXj7Cy4a9cs-z7ydaVGf3-b6tae-wPmPz4rXRIZQbW4RqQFtaRDVEhOpXQ7qiCDV6UYC2WbFw-DkpA6eCbwLDpRQ2hEaEdPpNNaXuH5So83Q3KCToODhqvaI_m6-W01rFYg_d1QTwzMTv3YqwKIu68tfOcZw1PHQ_r8Rui-uODa3YOAhDy_o6xrGtoFbdYPJ3sCAhaTU6YDHlvhZkm56WSc",
+            Price = 999999999
+        },
+
+        new Pizza
+        {
+            Name = "Пицца господина Ярулина",
+            Description = "Сыр, Ветчина, Высшая математика и теория веротяностей",
+            ImageUrl = "https://yandex-images.clstorage.net/I5sKv4119/7766866yf/WDwM_wNIusJ-WWC2Qzv3TpLnGyd2_kpuuabACRikU-UcZXWq2GHbYU1yf6Xu9shd54zrlxuSz4DTLfKktUvdqgUBbc4yRbK3KxBg734L62qCmjdSVv9WH_GKnGUNxBvAZHQ9p0CYHqnU24IILyshrNuFk58H5qKUjohLqPy-Ne9kbOwHp1SzttbdKe57I5dmutKPC947_tPJNo1t0by-eFUdUHuMyLZJtCtugDuLRdzbuetbN2O-bOp4ArSgxh13AHxAi0tQb37y8Q2KD3Nvfkrus3f-qzrn8aphWTl4_oj5KSi3pNiWGVSrjmwrO1msl6GH7ysPnnCKTFYwjAq5kwDctEeDJP8iBoFlroujnz6CGpcnaqsmW5HWEbXR4B70OUkQI3DwPn0E8ybQhzutxFdVY9Mbv4Ycghw6iPxeAXvsYJyrzzDXdmoVRR6Ts-8SpjZrV0oLMhuJ4rW91SDKDEG1dLPU2MIBkHv-3BeDJfQvzf8b14uC_Aa0ViyEColnDMTs50fow0pGhSECIycDDhamM0uCR0rvEbZd-aHA_vSBvSyDVKjavciL_qDbj4m4i9EL2zsrCuRuMHo0aMbx6zjsaCOzsPu2rp25rpMTh55uGkfHup_KjwE6QXGtEIIEQWn8A9x4jrFQtzrQP49lUCsRv7t7t4p05miq6KyKlZuMsBATFyRjVuL1ETof30dOOjovNyYz6tOt0m11mWCGyA3V6NMYJHrtQAPyjNPrIcCn3Qff149a5Ip4kgSAUrXj7Cy4a9cs-z7ydaVGf3-b6tae-wPmPz4rXRIZQbW4RqQFtaRDVEhOpXQ7qiCDV6UYC2WbFw-DkpA6eCbwLDpRQ2hEaEdPpNNaXuH5So83Q3KCToODhqvaI_m6-W01rFYg_d1QTwzMTv3YqwKIu68tfOcZw1PHQ_r8Rui-uODa3YOAhDy_o6xrGtoFbdYPJ3sCAhaTU6YDHlvhZkm56WSc",
+            Price = 999999999999999
+        },
+
+        new Pizza
+        {
+            Name = "Пиица 52",
+            Description = "Куры гриль и 52 пеперони с питера",
+            ImageUrl = "https://kartinki.pics/uploads/posts/2022-08/1660763359_49-kartinkin-net-p-pitstsa-gaudi-chekhov-yeda-krasivo-foto-72.jpg",
+            Price = 52
+        },
+
+        new Pizza
+        {
+            Name = "Пиица Негрони",
+            Description = "Пеперони на тонком тесте с плавленным сыром с добавкой коктейля негрони",
+            ImageUrl = "https://ae01.alicdn.com/kf/HTB1Nm5HjRsmBKNjSZFsq6yXSVXaW/1Set-6Pcs-15cm-Kids-Baby-Pizza-Party-Fast-Food-Cooking-Cutting-Pizza-Pretend-Play-Set-Kitchen.jpg",
+            Price = 2352
+        },
+
+        new Pizza
+        {
+            Name = "Пицца господина Карпова",
+            Description = "Фундамент C# с дольками питона с ароматными нотками паскаля",
+            ImageUrl = "https://kartinki.pics/uploads/posts/2022-12/thumbs/1671724795_kartinkin-net-p-kartinki-pitstsi-pepperoni-vkontakte-67.jpg",
+            Price = 9999999999999999
+        },
+
+        new Pizza
+        {
+            Name = "Тупо пицца с татмака",
+            Description = "Сыр, тесто, пол собаки, я не знаю что там еще намешано",
+            ImageUrl = "http://tat-mak.ru/img/18267916.jpg",
+            Price = 1
+        },
+    };
+
+    private List<Pizza> CartItems = new List<Pizza>();
+    private decimal totalPrice = 0;
+
+    private void AddToCart(Pizza pizza)
+    {
+        totalPrice += pizza.Price;
+
+        CartItems.Add(pizza);
+    }
+
+    private void RemoveFromCart(Pizza pizza)
+    {
+        totalPrice -= pizza.Price;
+
+        CartItems.Remove(pizza);
+    }
+    private void CreatePizza()
+    {
+        Pizza newPizza = new Pizza
+            {
+                Name = Name,
+                Description = Description,
+                ImageUrl = ImageUrl,
+                Price = Price
+            };
+
+        Pizzas.Add(newPizza);
+
+        Name = "";
+        Description = "";
+        ImageUrl = "";
+        Price = 0;
+    }
+}
