@@ -1,0 +1,13 @@
+﻿@page "/agents"
+
+@using Calc_ToDo_Api.Data
+@inject db_connection db_connection
+<h3>AgentJournal</h3>
+
+<AgentsTableComponent AgentsLists="@db_connection.agents"></AgentsTableComponent>
+<AgentsTableComponent SumAgentsLists="@db_connection.sumagents"></AgentsTableComponent>
+
+
+@code {
+
+}

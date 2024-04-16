@@ -1,0 +1,148 @@
+﻿@using Calc_ToDo_Api.Data
+@inject db_connection db_connection
+
+@if (showModal)
+{
+    <div class="modal" tabindex="-1" style="display:block;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Добавление агента</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" @onclick="CloseModal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="name">Name:</label>
+                    <input type="text" @bind="newAgent"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @onclick="SubmitName">Сохранить изменения</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (showSumModal)
+{
+    <div class="modal" tabindex="-1" style="display:block;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Добавление агента</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" @onclick="CloseSelectAgentModal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <select>
+                        Agent:
+                        @* @foreach (var a in AgentsLists)
+                        {
+                            <option value="@a.GetType()">@a.Name</option>
+                        } *@
+                        <select>
+                            <option value="value1">Вариант 1</option>
+                            <option value="value2">Вариант 2</option>
+                            <option value="value3">Вариант 3</option>
+                        </select>
+
+                        <input type="text" @bind="sum" />
+
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @onclick="SumbitSumAg">Сохранить изменения</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<button type="button" @onclick="OpenModal">Add agent</button>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+    </tr>
+  </thead>
+  <tbody>
+        @foreach (var s in AgentsLists)
+        {
+            <tr>
+                <th scope="row">@(AgentsLists.IndexOf(s) + 1)</th>
+                <td>@s.Name</td>
+            </tr>
+        }
+</tbody>
+</table>
+
+<button type="button" @onclick="OpenSumModal">Add</button>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Sum</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var s in SumAgentsLists)
+        {
+            <tr>
+                <th scope="row">@(SumAgentsLists.IndexOf(s) + 1)</th>
+                <td>@s.Name</td>
+                <td>@s.Sum</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter] public List<Agent> AgentsLists { get; set; }
+    [Parameter] public List<SumAgent> SumAgentsLists { get; set; }
+
+    private bool showModal = false;
+    private bool showSumModal = false;
+
+    string newAgent;
+    int sum;
+
+    private Agent selectedAgent;
+
+    private void OpenModal()
+    {
+        showModal = true;
+    }
+
+    private void OpenSumModal()
+    {
+        showSumModal = true;
+    }
+
+    private void CloseModal()
+    {
+        showModal = false;
+    }
+
+    private void CloseSelectAgentModal()
+    {
+        showSumModal = false;
+    }
+
+    private void SumbitSumAg()
+    {
+        CloseSelectAgentModal();
+    }
+
+    private void SubmitName()
+    {
+        if (!string.IsNullOrWhiteSpace(newAgent))
+        {
+            db_connection.agents.Add(new Agent(newAgent));
+            CloseModal();
+            newAgent = "";
+        }
+    }
+}
