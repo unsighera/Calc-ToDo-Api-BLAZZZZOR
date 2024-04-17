@@ -32,21 +32,14 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" @onclick="CloseSelectAgentModal" aria-label="Закрыть"></button>
                 </div>
                 <div class="modal-body">
-                    <select>
+                    <select @bind="_select">
                         Agent:
-                        @* @foreach (var a in AgentsLists)
+                        @foreach (var a in AgentsLists)
                         {
-                            <option value="@a.GetType()">@a.Name</option>
-                        } *@
-                        <select>
-                            <option value="value1">Вариант 1</option>
-                            <option value="value2">Вариант 2</option>
-                            <option value="value3">Вариант 3</option>
-                        </select>
-
-                        <input type="text" @bind="sum" />
-
+                            <option>@a.Name</option>
+                        }
                     </select>
+                    <input type="text" @bind="sum" />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" @onclick="SumbitSumAg">Сохранить изменения</button>
@@ -93,19 +86,20 @@
             <tr>
                 <th scope="row">@(SumAgentsLists.IndexOf(s) + 1)</th>
                 <td>@s.Name</td>
-                <td>@s.Sum</td>
+                <td style="color: @(s.Sum > 0 ? "green" : "red")">@s.Sum</td>
             </tr>
         }
     </tbody>
 </table>
 
 @code {
-    [Parameter] public List<Agent> AgentsLists { get; set; }
-    [Parameter] public List<SumAgent> SumAgentsLists { get; set; }
+    [Parameter] public List<Agent> AgentsLists { get; set; } = new();
+    [Parameter] public List<SumAgent> SumAgentsLists { get; set; } = new();
 
     private bool showModal = false;
     private bool showSumModal = false;
 
+    string _select;
     string newAgent;
     int sum;
 
@@ -133,7 +127,13 @@
 
     private void SumbitSumAg()
     {
-        CloseSelectAgentModal();
+        if(sum > 0 || sum < 0)
+        {
+            db_connection.sumagents.Add(new SumAgent(_select, sum));
+            CloseSelectAgentModal();
+            newAgent = "";
+            sum = 0;
+        }
     }
 
     private void SubmitName()

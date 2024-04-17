@@ -4,8 +4,7 @@
 @inject db_connection db_connection
 <h3>AgentJournal</h3>
 
-<AgentsTableComponent AgentsLists="@db_connection.agents"></AgentsTableComponent>
-<AgentsTableComponent SumAgentsLists="@db_connection.sumagents"></AgentsTableComponent>
+<AgentsTableComponent SumAgentsLists="@db_connection.sumagents" AgentsLists="@db_connection.agents"></AgentsTableComponent>
 
 
 @code {
